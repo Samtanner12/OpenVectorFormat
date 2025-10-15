@@ -374,6 +374,10 @@ message VectorBlock {
     ExposurePause exposure_pause = 10;
     LineSequenceParaAdapt line_sequence_para_adapt = 11;
     HatchesParaAdapt _hatchParaAdapt = 12;
+    CubicBezier cubic_bezier = 13;                  
+    QuadraticBezier quadratic_bezier = 14;          
+    CubicBezier3D cubic_bezier_3d = 15;              
+    QuadraticBezier3D quadratic_bezier_3d = 16;   
   }
 
   //key used in Job/markingParamsMap
@@ -588,6 +592,33 @@ message VectorBlock {
   message HatchesParaAdapt {
     repeated LineSequenceParaAdapt hatchAsLinesequence = 1;
   }
+
+  //Quadratic Bézier segments in 2D.
+  //Each segment is (x0, y0, cx, cy, x1, y1)  => 6 floats per segment.
+  //Pack N segments as: [x0,y0,cx,cy,x1,y1,  x0,y0,cx,cy,x1,y1,  ...]
+  message QuadraticBezier {
+    repeated float segments = 1;
+  }
+
+  //Cubic Bézier segments in 2D.
+  //Each segment is (x0, y0, c1x, c1y, c2x, c2y, x1, y1)  => 8 floats per segment.
+  //Pack N segments as: [x0,y0,c1x,c1y,c2x,c2y,x1,y1,  ...]
+  message CubicBezier {
+    repeated float segments = 1;
+  }
+
+  //Quadratic Bézier segments in 3D.
+  //Each segment is (x0, y0, z0, cx, cy, cz, x1, y1, z1)  => 9 floats per segment.
+  message QuadraticBezier3D {
+    repeated float segments = 1;
+  }
+
+  //Cubic Bézier segments in 3D.
+  //Each segment is (x0, y0, z0, c1x, c1y, c1z, c2x, c2y, c2z, x1, y1, z1)  => 12 floats per segment.
+  message CubicBezier3D {
+    repeated float segments = 1;
+  }
+
 }
 
   //axis aligned rectangular box in 2D
