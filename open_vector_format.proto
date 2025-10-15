@@ -618,7 +618,6 @@ message VectorBlock {
   message CubicBezier3D {
     repeated float segments = 1;
   }
-
 }
 
   //axis aligned rectangular box in 2D
