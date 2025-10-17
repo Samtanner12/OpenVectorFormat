@@ -374,10 +374,14 @@ message VectorBlock {
     ExposurePause exposure_pause = 10;
     LineSequenceParaAdapt line_sequence_para_adapt = 11;
     HatchesParaAdapt _hatchParaAdapt = 12;
-    CubicBezier cubic_bezier = 13;                  
-    QuadraticBezier quadratic_bezier = 14;          
-    CubicBezier3D cubic_bezier_3d = 15;              
-    QuadraticBezier3D quadratic_bezier_3d = 16;   
+    CubicBezierHatches cubic_bezier_hatches = 13;                  
+    QuadraticBezierHatches quadratic_bezier_hatches = 14;          
+    CubicBezierSpline cubic_bezier_spline = 15;              
+    QuadraticBezierSpline quadratic_bezier_spline = 16;   
+    CubicBezierHatches3D cubic_bezier_hatches_3d = 17;                  
+    QuadraticBezierHatches3D quadratic_bezier_hatches_3d = 18;          
+    CubicBezierSpline3D cubic_bezier_spline_3d = 19;              
+    QuadraticBezierSpline3D quadratic_bezier_spline_3d = 20;  
   }
 
   //key used in Job/markingParamsMap
@@ -593,31 +597,66 @@ message VectorBlock {
     repeated LineSequenceParaAdapt hatchAsLinesequence = 1;
   }
 
-  //Quadratic Bézier segments in 2D.
+  //Quadratic Bézier segments.
   //Each segment is (x0, y0, cx, cy, x1, y1)  => 6 floats per segment.
   //Pack N segments as: [x0,y0,cx,cy,x1,y1,  x0,y0,cx,cy,x1,y1,  ...]
-  message QuadraticBezier {
+  message QuadraticBezierHatches {
     repeated float segments = 1;
   }
 
-  //Cubic Bézier segments in 2D.
+  //Cubic Bézier segments.
   //Each segment is (x0, y0, c1x, c1y, c2x, c2y, x1, y1)  => 8 floats per segment.
   //Pack N segments as: [x0,y0,c1x,c1y,c2x,c2y,x1,y1,  ...]
-  message CubicBezier {
+  message CubicBezierHatches {
     repeated float segments = 1;
+  }
+
+  //Linked Quadratic Bézier segments.
+  //Initial segment contains start point (Ix, Iy)
+  //Each segment is (cx0, cy0, x0, y0) in the format control, target
+  //=> 2 for start then 4 per segment.
+  message QuadraticBezierSpline{
+    repeated float data = 1;
+  }
+
+  //Linked Cubic Bézier segments.
+  //Initial segment contains start point (Ix, Iy)
+  //Each segment is (c1x0, c1y0, c2x0, c2y0, x0, y0) in the format control, control, target
+  //=> 2 floats for start then 6 per segment.
+  message CubicBezierSpline {
+    repeated float data = 1;
   }
 
   //Quadratic Bézier segments in 3D.
   //Each segment is (x0, y0, z0, cx, cy, cz, x1, y1, z1)  => 9 floats per segment.
-  message QuadraticBezier3D {
+  //Pack N segments as: [x0,y0,z0,cx,cy,cz,x1,y1,z1  x0,y0,z0,cx,cy,cz,x1,y1,z1  ...]
+  message QuadraticBezierHatches3D {
     repeated float segments = 1;
   }
 
   //Cubic Bézier segments in 3D.
-  //Each segment is (x0, y0, z0, c1x, c1y, c1z, c2x, c2y, c2z, x1, y1, z1)  => 12 floats per segment.
-  message CubicBezier3D {
+  //Each segment is (x0, y0, z0, c1x, c1y, c2z, c2x, c2y, c2z, x1, y1, z1)  => 12 floats per segment.
+  //Pack N segments as: [x0,y0,z0,c1x,c1y,c1z,c2x,c2y,c2z,x1,y1,z1  ...]
+  message CubicBezierHatches3D {
     repeated float segments = 1;
   }
+
+  //Linked Quadratic Bézier segments.
+  //Initial segment contains start point (Ix, Iy, Iz)
+  //Each segment is (cx0, cy0, cz0, x0, y0, z0) in the format control, target
+  //=> 3 for start then 6 per segment.
+  message QuadraticBezierSpline3D{
+    repeated float data = 1;
+  }
+
+  //Linked Cubic Bézier segments.
+  //Initial segment contains start point (Ix, Iy, Iz)
+  //Each segment is (c1x0, c1y0, c1z0, c2x0, c2y0, c2z0, x0, y0, z0) in the format control, control, target
+  //=> 3 floats for start then 9 per segment.
+  message CubicBezierSpline3D {
+    repeated float data = 1;
+  }
+
 }
 
   //axis aligned rectangular box in 2D
