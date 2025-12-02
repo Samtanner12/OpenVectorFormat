@@ -597,66 +597,68 @@ message VectorBlock {
     repeated LineSequenceParaAdapt hatchAsLinesequence = 1;
   }
 
-  //Quadratic Bézier segments.
-  //Each segment is (x0, y0, cx, cy, x1, y1)  => 6 floats per segment.
-  //Pack N segments as: [x0,y0,cx,cy,x1,y1,  x0,y0,cx,cy,x1,y1,  ...]
+  // Quadratic Bézier segments in 2D.
+  // Each segment: (x0, y0, cx, cy, x1, y1)  => 6 floats/segment.
+  // Pack N: [x0,y0,cx,cy,x1,y1,  x0,y0,cx,cy,x1,y1,  ...]
   message QuadraticBezierHatches {
     repeated float segments = 1;
   }
 
-  //Cubic Bézier segments.
-  //Each segment is (x0, y0, c1x, c1y, c2x, c2y, x1, y1)  => 8 floats per segment.
-  //Pack N segments as: [x0,y0,c1x,c1y,c2x,c2y,x1,y1,  ...]
+  // Cubic Bézier segments in 2D.
+  // Each segment: (x0, y0, c1x, c1y, c2x, c2y, x1, y1)  => 8 floats/segment.
+  // Pack N: [x0,y0,c1x,c1y,c2x,c2y,x1,y1,  ...]
   message CubicBezierHatches {
     repeated float segments = 1;
   }
 
-  //Linked Quadratic Bézier segments.
-  //Initial segment contains start point (Ix, Iy)
-  //Each segment is (cx0, cy0, x0, y0) in the format control, target
-  //=> 2 for start then 4 per segment.
-  message QuadraticBezierSpline{
-    repeated float data = 1;
+  // Linked Quadratic Bézier spline in 2D (continuous).
+  // start_control packs tuples (x_i, y_i, cx_i, cy_i) => 4 floats/tuple.
+  // The end of segment i is the start (x_{i+1},y_{i+1}); the last segment ends at (last_x,last_y).
+  message QuadraticBezierSpline {
+    repeated float start_control = 1; // len % 4 == 0, len >= 4
+    float last_x = 2;
+    float last_y = 3;
   }
 
-  //Linked Cubic Bézier segments.
-  //Initial segment contains start point (Ix, Iy)
-  //Each segment is (c1x0, c1y0, c2x0, c2y0, x0, y0) in the format control, control, target
-  //=> 2 floats for start then 6 per segment.
+  // Linked Cubic Bézier spline in 2D (continuous).
+  // start_control packs tuples (x_i, y_i, c1x_i, c1y_i, c2x_i, c2y_i) => 6 floats/tuple.
   message CubicBezierSpline {
-    repeated float data = 1;
+    repeated float start_control = 1; // len % 6 == 0, len >= 6
+    float last_x = 2;
+    float last_y = 3;
   }
 
-  //Quadratic Bézier segments in 3D.
-  //Each segment is (x0, y0, z0, cx, cy, cz, x1, y1, z1)  => 9 floats per segment.
-  //Pack N segments as: [x0,y0,z0,cx,cy,cz,x1,y1,z1  x0,y0,z0,cx,cy,cz,x1,y1,z1  ...]
+  // Quadratic Bézier segments in 3D.
+  // Each segment: (x0, y0, z0, cx, cy, cz, x1, y1, z1)  => 9 floats/segment.
+  // Pack N: [x0,y0,z0,cx,cy,cz,x1,y1,z1,  x0,y0,z0,cx,cy,cz,x1,y1,z1,  ...]
   message QuadraticBezierHatches3D {
     repeated float segments = 1;
   }
 
-  //Cubic Bézier segments in 3D.
-  //Each segment is (x0, y0, z0, c1x, c1y, c2z, c2x, c2y, c2z, x1, y1, z1)  => 12 floats per segment.
-  //Pack N segments as: [x0,y0,z0,c1x,c1y,c1z,c2x,c2y,c2z,x1,y1,z1  ...]
+  // Cubic Bézier segments in 3D.
+  // Each segment: (x0, y0, z0, c1x, c1y, c1z, c2x, c2y, c2z, x1, y1, z1)  => 12 floats/segment.
+  // Pack N: [x0,y0,z0,c1x,c1y,c1z,c2x,c2y,c2z,x1,y1,z1,  ...]
   message CubicBezierHatches3D {
     repeated float segments = 1;
   }
 
-  //Linked Quadratic Bézier segments.
-  //Initial segment contains start point (Ix, Iy, Iz)
-  //Each segment is (cx0, cy0, cz0, x0, y0, z0) in the format control, target
-  //=> 3 for start then 6 per segment.
-  message QuadraticBezierSpline3D{
-    repeated float data = 1;
+  // Linked Quadratic Bézier spline in 3D (continuous).
+  // start_control packs (x_i, y_i, z_i, cx_i, cy_i, cz_i) => 6 floats/tuple.
+  message QuadraticBezierSpline3D {
+    repeated float start_control = 1; // len % 6 == 0, len >= 6
+    float last_x = 2;
+    float last_y = 3;
+    float last_z = 4;
   }
 
-  //Linked Cubic Bézier segments.
-  //Initial segment contains start point (Ix, Iy, Iz)
-  //Each segment is (c1x0, c1y0, c1z0, c2x0, c2y0, c2z0, x0, y0, z0) in the format control, control, target
-  //=> 3 floats for start then 9 per segment.
+  // Linked Cubic Bézier spline in 3D (continuous).
+  // start_control packs (x_i, y_i, z_i, c1x_i, c1y_i, c1z_i, c2x_i, c2y_i, c2z_i) => 9 floats/tuple.
   message CubicBezierSpline3D {
-    repeated float data = 1;
+    repeated float start_control = 1; // len % 9 == 0, len >= 9
+    float last_x = 2;
+    float last_y = 3;
+    float last_z = 4;
   }
-
 }
 
   //axis aligned rectangular box in 2D
